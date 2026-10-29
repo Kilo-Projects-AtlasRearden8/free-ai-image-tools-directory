@@ -1,14 +1,23 @@
 # Free AI Image Tools Directory
 
-A free, no-account-required directory of AI image generators and tools — browser-based, local, and open-source — with usage limits, privacy notes, and step-by-step beginner tutorials.
+A free, no-account-required directory of AI image generators and tools —
+browser-based, local, and open-source — with usage limits, privacy notes, and
+step-by-step beginner tutorials.
 
-Published by **Asdale Dynamics, LLC** — beginner-friendly AI education, books, and practical tools. Plain English, step by step, never condescending.
+Published by **Asdale Dynamics, LLC** — beginner-friendly AI education, books,
+and practical tools. Plain English, step by step, never condescending.
 
 ## Who this is for
 
-This directory is for anyone who wants to make AI images without handing over a credit card or creating an account. It was built with beginners in mind: if you can open a web browser or unzip a folder, you can use the tools here.
+This directory is for anyone who wants to make AI images without handing over a
+credit card or creating an account. It was built with beginners in mind: if you
+can open a web browser or unzip a folder, you can use the tools here.
 
-It supports the work of **Dylan Asdale**, a registered nurse turned AI author and founder of Asdale Dynamics, LLC (Indiana, formed October 2026). His book *The Massive AI Manual* and hub site dylanasdale.github.io explain AI "like a friend would." This directory is part of that same plain-English, beginner-friendly approach.
+It supports the work of **Dylan Asdale**, a registered nurse turned AI author
+and founder of Asdale Dynamics, LLC (Indiana, formed October 2026). His book
+*The Massive AI Manual* and hub site dylanasdale.github.io explain AI "like a
+friend would." This directory is part of that same plain-English,
+beginner-friendly approach.
 
 ## Quick answers
 
@@ -24,7 +33,8 @@ It supports the work of **Dylan Asdale**, a registered nurse turned AI author an
 
 ## 1. Browser-based tools (no install, no account)
 
-These run in your web browser. Nothing installs on your computer, but your prompts travel to the tool's servers.
+These run in your web browser. Nothing installs on your computer, but your
+prompts travel to the tool's servers.
 
 | Tool | Website | What it does | Free usage limits | Privacy notes | Account required? |
 |------|---------|--------------|-------------------|---------------|-------------------|
@@ -33,6 +43,7 @@ These run in your web browser. Nothing installs on your computer, but your promp
 | Hugging Face Spaces | huggingface.co/spaces | Public demo apps for Stable Diffusion and other models, run by the community. Each Space is a separate app with its own style. | Free for most public demos; popular Spaces may have a queue, so you wait your turn. Each Space sets its own limits. | Hugging Face's standard privacy policy applies to the site; each Space is run by its creator, so read the Space's description before typing in sensitive text. | No for most public demos |
 
 ### Why browser tools?
+
 - Start in seconds. No install, no GPU required, no command line.
 - Trade-off: you rely on the website's servers, speeds vary with traffic, and free tiers often include ads or queues.
 
@@ -40,7 +51,9 @@ These run in your web browser. Nothing installs on your computer, but your promp
 
 ## 2. Local tools (install and run on your own computer)
 
-These install on your computer and generate images there. Nothing leaves your machine unless you choose to share it. You need a reasonably modern computer, and an NVIDIA GPU makes them much faster (CPU-only works but is slow).
+These install on your computer and generate images there. Nothing leaves your
+machine unless you choose to share it. You need a reasonably modern computer,
+and an NVIDIA GPU makes them much faster (CPU-only works but is slow).
 
 | Tool | Website / Source | Best for | Computer needs | Privacy | Account required? |
 |------|------------------|----------|----------------|---------|-------------------|
@@ -51,6 +64,7 @@ These install on your computer and generate images there. Nothing leaves your ma
 | InvokeAI | github.com/invoke-ai/InvokeAI | Modern local interface with strong canvas and editing features. | Windows/Linux/macOS; NVIDIA GPU recommended. | Fully local. | No |
 
 ### Why local tools?
+
 - Complete privacy: your prompts and images stay on your computer.
 - No ads, no queues, no usage limits.
 - Trade-off: setup takes time, and you need enough RAM and preferably a dedicated GPU.
@@ -59,7 +73,8 @@ These install on your computer and generate images there. Nothing leaves your ma
 
 ## 3. Open-source models and weights
 
-Local tools need a model (the "brain" that creates images). These are the most common open options:
+Local tools need a model (the "brain" that creates images). These are the most
+common open options:
 
 | Model | What it is | Notes |
 |-------|------------|-------|
@@ -69,10 +84,16 @@ Local tools need a model (the "brain" that creates images). These are the most c
 | Flux.1 [schnell] | Open-weights model from Black Forest Labs; fast, high quality. | Released under a permissive license; good for local use. |
 | Flux.1 [dev] | Open-weights model from Black Forest Labs; high quality. | Non-commercial license; check terms before commercial use. |
 
-Where to get models: Hugging Face (huggingface.co/models) hosts official model files. Civitai (civitai.com) hosts community models and fine-tunes; downloading from Civitai typically requires a free account, so it is not featured as a no-account option here.
+Where to get models: Hugging Face (huggingface.co/models) hosts official model
+files. Civitai (civitai.com) hosts community models and fine-tunes; downloading
+from Civitai typically requires a free account, so it is not featured as a
+no-account option here.
 
 ### Model license reminder
-"Open" does not always mean "free for anything." Some models allow commercial use; others are non-commercial only. Check the license file with each model before using images in a product you sell.
+
+"Open" does not always mean "free for anything." Some models allow commercial
+use; others are non-commercial only. Check the license file with each model
+before using images in a product you sell.
 
 ---
 
@@ -85,20 +106,26 @@ Where to get models: Hugging Face (huggingface.co/models) hosts official model f
 3. Click the generate button and wait for the images to appear.
 4. Click an image to save or download it.
 
-**Tips for better results:** Describe the subject, the setting, the lighting, and the style (photo, painting, 3D render, illustration). If the first result isn't right, change one word and try again.
+**Tips for better results:** Describe the subject, the setting, the lighting,
+and the style (photo, painting, 3D render, illustration). If the first result
+isn't right, change one word and try again.
 
 ### Tutorial 2: Run Stable Diffusion locally (Automatic1111 quickstart)
 
-**Requirements:** Windows or Linux with an NVIDIA GPU (4 GB VRAM+ recommended), or macOS with more setup. At least 8 GB RAM, 16 GB preferred. About 15–30 GB of free disk space.
+**Requirements:** Windows or Linux with an NVIDIA GPU (4 GB VRAM+ recommended),
+or macOS with more setup. At least 8 GB RAM, 16 GB preferred. About 15–30 GB
+of free disk space.
 
 1. Install Python 3.10 or 3.11 from python.org if you don't have it. During install, check "Add Python to PATH."
 2. Install Git from git-scm.com if you don't have it.
 3. Open a terminal (Command Prompt or PowerShell on Windows; Terminal on Mac/Linux).
 4. Download the software:
-   ```
-   git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
-   cd stable-diffusion-webui
-   ```
+
+```
+git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui.git
+cd stable-diffusion-webui
+```
+
 5. Launch it:
    - Windows: double-click `webui-user.bat`
    - Mac/Linux: `./webui.sh`
@@ -125,7 +152,7 @@ If privacy matters to you (for example, you're making book covers, personal art,
 | If you want... | Start with |
 |----------------|------------|
 | To try it right now, no install | Craiyon or Pollinations |
-| To experiment with many models demos | Hugging Face Spaces |
+| To experiment with many model demos | Hugging Face Spaces |
 | Full privacy, no limits, and have a GPU | Automatic1111 or ComfyUI |
 | Something simple on a Mac | DiffusionBee |
 | Simple local tool with good defaults | Fooocus |

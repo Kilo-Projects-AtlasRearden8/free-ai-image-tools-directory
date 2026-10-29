@@ -2,8 +2,9 @@
 """Build a printable HTML directory from README.md.
 
 Pure standard library. Converts the subset of Markdown used by README.md
-(headings, bold, links, inline code, code fences, lists, tables, rules)
-into a self-contained HTML document with print styles (A4).
+(headings, bold, links, inline code, code fences, ordered/unordered lists,
+tables, horizontal rules) into a self-contained HTML document with A4 print
+styles.
 """
 import html
 import re
@@ -12,6 +13,9 @@ import sys
 
 def escape(text):
     return html.escape(text, quote=False)
+
+
+_SEP_RE = re.compile(r"^:?-{3,}:?$")
 
 
 def inline(md):
@@ -27,6 +31,11 @@ def inline(md):
         md,
     )
     return md
+
+
+def is_separator_row(cells):
+    """True if every cell is a Markdown table separator (e.g. |---|)."""
+    return cells and all(_SEP_RE.match(c) for c in cells if c)
 
 
 def convert_blocks(markdown):
@@ -46,27 +55,34 @@ def convert_blocks(markdown):
             return
         out.append("<p>" + inline(text) + "</p>")
 
+    def close_code():
+        nonlocal in_code, code_lines, code_lang
+        if in_code:
+            out.append(
+                '<pre><code class="lang-' + escape(code_lang) + '">'
+                + escape("\n".join(code_lines)) + "</code></pre>"
+            )
+            in_code = False
+            code_lines = []
+            code_lang = ""
+
     while i < n:
         line = lines[i]
 
-        # Blank lines separate blocks
+        # Blank lines separate blocks; also close an open code block.
         if line.strip() == "":
+            close_code()
             i += 1
             continue
 
-        # Code fences
-        if re.match(r"^```", line):
+        # Code fences (allow leading indentation).
+        mf = re.match(r"^(\s*)```", line)
+        if mf:
             if in_code:
-                out.append(
-                    '<pre><code class="lang-' + escape(code_lang) + '">'
-                    + escape("\n".join(code_lines)) + "</code></pre>"
-                )
-                in_code = False
-                code_lines = []
-                code_lang = ""
+                close_code()
             else:
+                code_lang = line[mf.end():].strip()
                 in_code = True
-                code_lang = line[3:].strip()
             i += 1
             continue
         if in_code:
@@ -83,6 +99,7 @@ def convert_blocks(markdown):
         # Headings
         m = re.match(r"^(#{1,6})\s+(.+)$", line)
         if m:
+            close_code()
             level = len(m.group(1))
             text = m.group(2).strip()
             out.append("<h%d>%s</h%d>" % (level, inline(text), level))
@@ -91,16 +108,18 @@ def convert_blocks(markdown):
 
         # Tables
         if re.match(r"^\s*\|", line):
+            close_code()
             raw_rows = []
             while i < n and re.match(r"^\s*\|", lines[i]):
                 cells = [c.strip() for c in lines[i].strip().strip("|").split("|")]
-                html_cells = []
-                for c in cells:
-                    if re.match(r"^:?-{3,}:?$", c):
-                        html_cells.append("")
-                    else:
-                        html_cells.append(inline(c))
-                raw_rows.append(html_cells)
+                if not is_separator_row(cells):
+                    html_cells = []
+                    for c in cells:
+                        if _SEP_RE.match(c):
+                            html_cells.append("")
+                        else:
+                            html_cells.append(inline(c))
+                    raw_rows.append(html_cells)
                 i += 1
             out.append("<table>")
             if raw_rows:
@@ -118,33 +137,50 @@ def convert_blocks(markdown):
             out.append("</table>")
             continue
 
-        # List items
-        m = re.match(r"^(\s*)[-*+]\s+(.+)$", line)
-        if m:
-            indent = len(m.group(1))
-            item_text = m.group(2)
-            list_items = []
+        # Ordered lists (1., 2., ...)
+        mo = re.match(r"^(\s*)\d+\.\s+(.+)$", line)
+        if mo:
+            close_code()
+            items = []
+            while i < n and re.match(r"^(\s*)\d+\.\s+(.+)$", lines[i]):
+                mm = re.match(r"^(\s*)\d+\.\s+(.+)$", lines[i])
+                items.append(mm.group(2))
+                i += 1
+            out.append("<ol>")
+            for it in items:
+                out.append("<li>" + inline(it) + "</li>")
+            out.append("</ol>")
+            continue
+
+        # Unordered lists (- * +)
+        mu = re.match(r"^(\s*)[-*+]\s+(.+)$", line)
+        if mu:
+            close_code()
+            items = []
             while i < n and re.match(r"^(\s*)[-*+]\s+(.+)$", lines[i]):
                 mm = re.match(r"^(\s*)[-*+]\s+(.+)$", lines[i])
-                list_items.append(mm.group(2))
+                items.append(mm.group(2))
                 i += 1
             out.append("<ul>")
-            for it in list_items:
+            for it in items:
                 out.append("<li>" + inline(it) + "</li>")
             out.append("</ul>")
             continue
 
         # Paragraph lines
         par = []
-        while i < n and lines[i].strip() != "" and not re.match(r"^```", lines[i]) \
+        while i < n and lines[i].strip() != "" \
+                and not re.match(r"^\s*```", lines[i]) \
                 and not re.match(r"^(#{1,6})\s+", lines[i]) \
                 and not re.match(r"^\s*\|", lines[i]) \
+                and not re.match(r"^(\s*)\d+\.\s+", lines[i]) \
                 and not re.match(r"^(\s*)[-*+]\s+", lines[i]) \
                 and not re.match(r"^[-*_]{3,}\s*$", lines[i]):
             par.append(lines[i])
             i += 1
         flush_paragraph(par)
 
+    close_code()
     return "\n".join(out)
 
 
@@ -277,14 +313,6 @@ def build_html(markdown):
 </style>
 </head>
 <body>
-<div class="titlepage">
-  <h1>%s</h1>
-  <p class="subtitle">A free, no-account-required directory of AI image generators and tools —
-  browser-based, local, and open-source — with usage limits, privacy notes, and beginner tutorials.</p>
-  <p class="credit">Published by <strong>Asdale Dynamics, LLC</strong> (Indiana, formed October 2026).<br>
-  Plain English, step by step, never condescending.</p>
-</div>
-
 %s
 
 <p class="footnote no-print">
@@ -294,7 +322,7 @@ def build_html(markdown):
 </p>
 </body>
 </html>
-""" % (title, PAGE_CSS, title, body)
+""" % (title, PAGE_CSS, body)
 
 
 def main():
